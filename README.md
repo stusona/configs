@@ -1,0 +1,2 @@
+# configs
+aliases, bashrc, etc
