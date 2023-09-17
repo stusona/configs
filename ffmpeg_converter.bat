@@ -32,5 +32,13 @@ set /p HEIGHT="Output pixel height (-1 indicates maintain aspect ratio): "
 :: palettegen filter converts [a] into a 256 color palette file [p]
 :: The video [b] and palette [p] are input into paletteuse
 
-ffmpeg -ss %START_TIME% -t %LENGTH% -i %FILENAME% -filter_complex "[0:v] fps=%FPS%, scale=width=%WIDTH%:height=-1, split [a][b];[a] palettegen [p];[b][p] paletteuse" output.gif
+:: [0:v] is first video stream
+:: crop=out_width:out_height:top_left_x:top_left_y (where origin is top left of video)
+
+ffmpeg -ss %START_TIME% -t %LENGTH% -i %FILENAME% ^
+-filter_complex "[0:v] fps=%FPS%, scale=width=%WIDTH%:height=-1, split [a][b];[a] palettegen [p];[b][p] paletteuse" ^
+output.gif
 PAUSE
+
+:: here's a crop filter (very manual process!)
+::-filter_complex "[0:v] fps=%FPS%, scale=width=%WIDTH%:height=-1, split [a][b];[a] palettegen [p];[b][p] paletteuse, crop=600:600:180:0" ^
